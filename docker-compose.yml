@@ -1,0 +1,36 @@
+version: "3.4"
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+    volumes:
+      - type: bind
+        source: ./mysql-data
+        target: /var/lib/mysql
+    restart: always
+
+  app:
+    image: monica
+    depends_on:
+      - db
+    ports:
+      - 8800:80
+    environment:
+      - APP_KEY=5fToocHVt7r7LCd0DFGiWGUFpb9hbjJT
+      - DB_HOST=db
+    volumes:
+      - type: bind
+        source: ./app-data
+        target: /var/www/html/storage
+    restart: always
+
+volumes:
+  data:
+    name: data
+  mysql:
+    name: mysql
